@@ -12,7 +12,7 @@ const SignupForm = () => {
   const [validated] = useState(false);
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
-
+  // set mutation hook to execute addUser
   const [addUser, { error }] = useMutation(ADD_USER);
 
   const handleInputChange = (event) => {
@@ -31,6 +31,7 @@ const SignupForm = () => {
     }
 
     try {
+      // execute addUser mutation and get Auth data
       const { data } = await addUser({
         variables: { ...userFormData }
       });

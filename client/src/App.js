@@ -7,13 +7,14 @@ import SearchBooks from './pages/SearchBooks';
 import SavedBooks from './pages/SavedBooks';
 import Navbar from './components/Navbar';
 
-
+// create a link to the server
 const httpLink = createHttpLink({
   uri: '/graphql'
 });
 
-// set context to get token_id from localStorage and set it as context in graphQL requests
+// set context in graphQL requests
 const authLink = setContext((_, { headers }) => {
+  // get token from localStorage
   const token = localStorage.getItem('id_token');
   
   return {
@@ -25,6 +26,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+// connect the client with the server
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
   cache: new InMemoryCache(),

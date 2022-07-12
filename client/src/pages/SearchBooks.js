@@ -15,7 +15,7 @@ const SearchBooks = () => {
 
   // create state to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
-
+  // set mutation hook to execute saveBook
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
   // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
@@ -47,6 +47,8 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        // link to google search result
+        link: book.volumeInfo.previewLink
       }));
 
       setSearchedBooks(bookData);
@@ -62,6 +64,7 @@ const SearchBooks = () => {
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
 
     try {
+      // execute saveBook mutation
       const { data } = await saveBook({
         variables: { ...bookToSave }
       });
@@ -118,7 +121,15 @@ const SearchBooks = () => {
                   <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' />
                 ) : null}
                 <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
+                  <Card.Title>
+                    <a
+                      href={book.link}
+                      target="_blank" rel="noopener noreferrer" 
+                      className='ggl-link'
+                    >
+                      {book.title}
+                    </a>
+                  </Card.Title>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
                   {Auth.loggedIn() && (

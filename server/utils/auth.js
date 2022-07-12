@@ -15,6 +15,7 @@ module.exports = {
       token = token.split(' ').pop().trim();
     }
 
+    // if no token, return req as is
     if (!token) {
       return req;
     }
@@ -27,7 +28,7 @@ module.exports = {
       console.log('Invalid token');
     }
 
-    // send to next endpoint
+    // send updated request
     return req;
   },
   signToken: function ({ username, email, _id }) {

@@ -7,6 +7,7 @@ const resolvers = {
         me: async (parent, args, context) => {
             // if there is token in req headers, return user data, or else throw err
             if (context.user) {
+                // get user by its id
                 const userData = await User.findOne({ _id: context.user._id });
                 return userData;
             }
@@ -16,6 +17,7 @@ const resolvers = {
     },
     Mutation: {
         login: async (parent, { email, password }) => {
+            // get user by its email
             const user = await User.findOne({ email });
 
             // if the user not found, throw error
@@ -31,17 +33,21 @@ const resolvers = {
                 throw new AuthenticationError('Incorrect credentials');
             }
 
+            // create token
             const token = signToken(user);
             return { token, user };
         },
         addUser: async (parent, args) => {
+            // add user
             const user = await User.create(args);
+            // create token
             const token = signToken(user);
             
             return { token, user };
         },
         saveBook: async (parent, args, context) => {
             if (context.user) {
+                // get user by its id and update savedBooks array to include selected book
                 const userData = await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $push: { savedBooks: args } },
@@ -51,10 +57,12 @@ const resolvers = {
                 return userData;
             }
 
+            // throw error if the context doesn't have user info
             throw new AuthenticationError('Not logged in!');
         },
         removeBook: async (parent, { bookId }, context) => {
             if (context.user) {
+                // get user by its id to update savedBooks to remove the selected book from its array
                 const userData = await User.findOneAndUpdate(
                     { _id: context.user._id },
                     { $pull: { savedBooks: { bookId } } },

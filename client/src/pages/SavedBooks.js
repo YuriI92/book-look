@@ -7,14 +7,18 @@ import { GET_ME } from '../utils/queries';
 import { REMOVE_BOOK } from '../utils/mutations';
 
 const SavedBooks = () => {
+  // set query to get user data
   const { loading, data } = useQuery(GET_ME);
+  // set mutation hook to execute removeBook
   const [deleteBook, { error }] = useMutation(REMOVE_BOOK);
 
+  // if data.me has info, store it, or else store empty brackets to userData
   const userData = data?.me || {};
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     try {
+      // execute removeBook mutation to delete the book
       const { data } = await deleteBook({
         variables: { bookId }
       });
@@ -54,7 +58,15 @@ const SavedBooks = () => {
               <Card key={book.bookId} border='dark'>
                 {book.image ? <Card.Img src={book.image} alt={`The cover for ${book.title}`} variant='top' /> : null}
                 <Card.Body>
-                  <Card.Title>{book.title}</Card.Title>
+                  <Card.Title>
+                    <a
+                      href={book.link}
+                      target="_blank" rel="noopener noreferrer" 
+                      className='ggl-link'
+                    >
+                      {book.title}
+                    </a>
+                  </Card.Title>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
                   <Button className='btn-block btn-danger' onClick={() => handleDeleteBook(book.bookId)}>
