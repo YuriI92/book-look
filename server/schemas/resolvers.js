@@ -7,10 +7,7 @@ const resolvers = {
         me: async (parent, args, context) => {
             // if there is token in req headers, return user data, or else throw err
             if (context.user) {
-                const userData = await User.findOne({ _id: context.user._id })
-                    .select('-__v -password')
-                    .populate('savedBooks');
-                
+                const userData = await User.findOne({ _id: context.user._id });
                 return userData;
             }
 
@@ -47,7 +44,7 @@ const resolvers = {
             if (context.user) {
                 const userData = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $addToSet: { savedBooks: args } },
+                    { $push: { savedBooks: args } },
                     { new: true, runValidators: true }
                 );
 

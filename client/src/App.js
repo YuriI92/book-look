@@ -15,6 +15,7 @@ const httpLink = createHttpLink({
 // set context to get token_id from localStorage and set it as context in graphQL requests
 const authLink = setContext((_, { headers }) => {
   const token = localStorage.getItem('id_token');
+  
   return {
     headers: {
       ...headers,
