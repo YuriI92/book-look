@@ -66,7 +66,8 @@ const SearchBooks = () => {
     try {
       // execute saveBook mutation
       const { data } = await saveBook({
-        variables: { ...bookToSave }
+        // pass bookInfo to store in input property
+        variables: { input: { ...bookToSave } }
       });
 
       if (!data) {

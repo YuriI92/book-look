@@ -45,12 +45,13 @@ const resolvers = {
             
             return { token, user };
         },
-        saveBook: async (parent, args, context) => {
+        // saveBook: input: [Book]
+        saveBook: async (parent, { input }, context) => {
             if (context.user) {
                 // get user by its id and update savedBooks array to include selected book
                 const userData = await User.findOneAndUpdate(
                     { _id: context.user._id },
-                    { $push: { savedBooks: args } },
+                    { $push: { savedBooks: input } },
                     { new: true, runValidators: true }
                 );
 
